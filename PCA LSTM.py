@@ -126,16 +126,39 @@ history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data
 
 
 history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
-history_results.to_csv('results/PCA_LSTM_60secs.csv')
-model.save('models/PCA_LSTM_60secs')
+history_results.to_csv('results/PCA_LSTM_60secs_loss.csv')
+model.save('models/PCA_LSTM_60secs.h5')
 
 
-# In[15]:
+# In[ ]:
 
 
-a = list(range(10))
-b = list(range(0, 20, 2))
-pd.DataFrame(list(zip(a,b)), columns=['A', 'B'])
+from sklearn.metrics import mean_squared_error
+
+#Test for the day after
+n_rtest_seconds =  int(0.1*24*60*60) #10%
+rtest = values[-n_rtest_seconds:, :]
+
+rtest_X, rtest_y = rtest[:, :-pcn], rtest[:, -pcn:]
+rtest_X = rtest_X.reshape((rtest_X.shape[0], 1, rtest_X.shape[1]))
+# make a prediction
+yhat = model.predict(rtest_X)
+
+
+# In[ ]:
+
+
+mu = np.mean(scaled_df, axis=0)
+
+Xhat = np.dot(yhat, pca.components_[:pcn,:])
+Xhat_pca = np.array([Xhat[i] + mu for i in range(len(Xhat))])
+
+
+# In[ ]:
+
+
+prediction_results = pd.DataFrame(np.transpose(Xhat_pca))
+prediction_results.to_csv('results/PCA_LSTM_60secs_prediction.csv')
 
 
 # In[ ]:
