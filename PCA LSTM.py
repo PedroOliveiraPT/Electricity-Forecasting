@@ -125,6 +125,7 @@ history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data
 # In[ ]:
 
 
+history_results = pd.DataFrame([history.history['loss'], history.history['val_loss']], columns=['Loss', 'Validation Loss'])
 history_results.to_csv('results/PCA_LSTM_60secs.csv')
 model.save('models/PCA_LSTM_60secs')
 
