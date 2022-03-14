@@ -87,13 +87,14 @@ reframed = series_to_supervised(ds, history_window, prediction_window)
 print(reframed.head())
 
 
-# In[8]:
+# In[13]:
 
 
 values = reframed.values
-# split into train and test sets
-n_train_seconds = 2*24*60*60 #2 days
-n_test_seconds =  3*24*60*60 #3 days
+len_values = values.shape[0]
+# split into train and test sets 
+n_train_seconds = int(0.7*len_values) #70% dos valores
+n_test_seconds =  int(0.9*len_values) #20% dos valores
 train = values[:n_train_seconds, :]
 test = values[n_train_seconds:n_test_seconds, :]
 # split into input and outputs
@@ -124,6 +125,6 @@ history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data
 # In[ ]:
 
 
-history_results.to_csv('results/Simple_LSTM_60secs.csv')
-model.save('models/Simple_LSTM_60secs')
+history_results.to_csv('results/PCA_LSTM_60secs.csv')
+model.save('models/PCA_LSTM_60secs')
 
