@@ -5,3 +5,4 @@ scikit-learn==1.0.2
 scipy==1.8.0
 tensorflow==2.8.0
 pandas==1.4.1
+datapane==0.13.2
