@@ -108,7 +108,7 @@ print(train_X.shape, train_y.shape, test_X.shape, test_y.shape)
 
 
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 from keras.layers import LSTM
 
 # design network
