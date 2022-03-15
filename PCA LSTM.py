@@ -115,19 +115,19 @@ from keras.layers import LSTM
 
 # design network
 model = Sequential()
-model.add(LSTM(20, input_shape=(train_X.shape[1], train_X.shape[2])))
+model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
 model.add(Dense(pcn))
 model.compile(loss='mean_squared_error', optimizer='adam')
 # fit network
-history = model.fit(train_X, train_y, epochs=400, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
 
 
 # In[ ]:
 
 
 history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
-history_results.to_csv('results/PCA_LSTM_60secs_MSE_loss.csv')
-model.save('models/PCA_LSTM_60secs_MSE.h5')
+history_results.to_csv('results/PCA_LSTM40_60secs_MSE_loss.csv')
+model.save('models/PCA_LSTM40_60secs_MSE.h5')
 
 
 # In[ ]:
@@ -158,7 +158,7 @@ Xhat_pca = np.array([Xhat[i] + mu for i in range(len(Xhat))])
 
 
 prediction_results = pd.DataFrame(np.transpose(Xhat_pca))
-prediction_results.to_csv('results/PCA_LSTM_60secs_MSE_prediction.csv')
+prediction_results.to_csv('results/PCA_LSTM40_60secs_MSE_prediction.csv')
 
 
 # In[ ]:

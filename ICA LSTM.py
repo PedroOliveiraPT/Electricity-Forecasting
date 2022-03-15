@@ -113,8 +113,8 @@ from keras.layers import LSTM
 
 # design network
 model = Sequential()
-model.add(LSTM(20, input_shape=(train_X.shape[1], train_X.shape[2])))
-model.add(Dropout(0.25))
+model.add(LSTM(40, input_shape=(train_X.shape[1], train_X.shape[2])))
+#model.add(Dropout(0.25))
 model.add(Dense(pcn))
 model.compile(loss='mean_squared_error', optimizer='adam')
 # fit network
@@ -125,8 +125,8 @@ history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data
 
 
 history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
-history_results.to_csv('results/ICA_Drop_LSTM_60secs_MSE_loss.csv')
-model.save('models/ICA_Drop_LSTM_60secs_MSE.h5')
+history_results.to_csv('results/ICA_LSTM40_60secs_MSE_loss.csv')
+model.save('models/ICA_Drop_LSTM40_60secs_MSE.h5')
 
 
 # In[ ]:
@@ -154,7 +154,7 @@ Xhat_ica = ica.inverse_transform(yhat)
 
 
 prediction_results = pd.DataFrame(Xhat_ica)
-prediction_results.to_csv('results/ICA_Drop_LSTM_60secs_MSE_prediction.csv')
+prediction_results.to_csv('results/ICA_LSTM40_60secs_MSE_prediction.csv')
 
 
 # In[ ]:
