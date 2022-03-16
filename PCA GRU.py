@@ -120,7 +120,7 @@ model.add(Dense(units = 512, activation = 'relu'))
 model.add(Dense(pcn, activation='linear'))
 model.compile(loss='mean_squared_error', optimizer='adam')
 # fit network
-history = model.fit(train_X, train_y, epochs=300, batch_size=144, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+history = model.fit(train_X, train_y, epochs=100, batch_size=144, validation_data=(test_X, test_y), verbose=2, shuffle=False)
 
 
 # In[ ]:
