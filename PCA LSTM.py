@@ -115,7 +115,8 @@ from keras.layers import LSTM
 
 # design network
 model = Sequential()
-model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
+model.add(LSTM(40, input_shape=(train_X.shape[1], train_X.shape[2])))
+model.add(Dropout(0.25))
 model.add(Dense(pcn))
 model.compile(loss='mean_squared_error', optimizer='adam')
 # fit network
