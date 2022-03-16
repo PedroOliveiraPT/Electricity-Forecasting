@@ -111,6 +111,7 @@ print(train_X.shape, train_y.shape, test_X.shape, test_y.shape)
 
 from keras.models import Sequential
 from keras.layers import Dense
+from keras.layers import Dropout
 from keras.layers import LSTM
 
 # design network
@@ -127,8 +128,8 @@ history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data
 
 
 history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
-history_results.to_csv('results/PCA_LSTM40_60secs_MSE_loss.csv')
-model.save('models/PCA_LSTM40_60secs_MSE.h5')
+history_results.to_csv('results/PCA_LSTM40_Drop_60secs_MSE_loss.csv')
+model.save('models/PCA_LSTM40_Drop_60secs_MSE.h5')
 
 
 # In[ ]:
@@ -159,7 +160,7 @@ Xhat_pca = np.array([Xhat[i] + mu for i in range(len(Xhat))])
 
 
 prediction_results = pd.DataFrame(np.transpose(Xhat_pca))
-prediction_results.to_csv('results/PCA_LSTM40_60secs_MSE_prediction.csv')
+prediction_results.to_csv('results/PCA_LSTM40_Drop_60secs_MSE_prediction.csv')
 
 
 # In[ ]:
