@@ -140,15 +140,15 @@ def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
 df_2[corr_group['P_SUM']].shift(2)
 
 
-# In[39]:
+# In[40]:
 
 
 history_window = 8 # 8*15secs = 120secs
 prediction_window = 1 #predict 15 secs
 for k in corr_group:
     values = create_supervised_dataset(df_2, k, corr_group[k], n_in=history_window, n_out=prediction_window)
-    values = reframed.values
     len_values = values.shape[0]
+    print(len_values)
     # split into train and test sets 
     n_train_seconds = int(0.7*len_values) #70% dos valores
     n_test_seconds =  int(0.9*len_values) #20% dos valores
@@ -160,6 +160,7 @@ for k in corr_group:
     # reshape input to be 3D [samples, timesteps, features]
     train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
     test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
+    print(train_X.shape)
     model = create_model(train_x[2])
     history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
     history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
@@ -167,6 +168,7 @@ for k in corr_group:
     model.save('models/LSTM_'+k+'_model.h5')
 
     #Test for the day after
+    print("Starting Test", k)
     n_rtest_seconds =  int(0.1*len_values) #10% dos valores
     rtest = values[-n_rtest_seconds:, :]
 
