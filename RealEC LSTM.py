@@ -122,7 +122,7 @@ def create_model(features, timesteps=1):
 # In[19]:
 
 
-history_window =  30 # 8*15secs = 120secs
+history_window =  60 # 8*15secs = 120secs
 prediction_window = 1 #predict 15 secs
 for k in corr:
     values = create_supervised_dataset(scaled_df, k, corr[k], n_in=history_window, n_out=prediction_window)
