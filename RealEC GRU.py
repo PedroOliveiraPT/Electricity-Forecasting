@@ -73,9 +73,6 @@ scaled_df.head()
 # In[15]:
 
 
-scaled_df.plot()
-
-
 # In[16]:
 
 
@@ -122,7 +119,7 @@ def create_model(features, timesteps=1):
 # In[19]:
 
 
-history_window =  30 # 8*15secs = 120secs
+history_window =  60 # 8*15secs = 120secs
 prediction_window = 1 #predict 15 secs
 for k in corr:
     values = create_supervised_dataset(scaled_df, k, corr[k], n_in=history_window, n_out=prediction_window)
@@ -143,8 +140,8 @@ for k in corr:
     model = create_model(train_X.shape[2])
     history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(cv_X, cv_y), verbose=2, shuffle=False)
     history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
-    history_results.to_csv('results/Spec_Norm_LSTM_'+k+'_history.csv')
-    model.save('models/Spec_Norm_LSTM_'+k+'_model.h5')
+    history_results.to_csv('results/Spec_Norm_GRU_'+k+'_history.csv')
+    model.save('models/Spec_Norm_GRU_'+k+'_model.h5')
 
     #Test for the day after
     print("Starting Test", k)
@@ -156,7 +153,7 @@ for k in corr:
     # make a prediction
     yhat = model.predict(test_X)
     prediction_results = pd.DataFrame(yhat)
-    prediction_results.to_csv('results/Spec_Norm_LSTM'+k+'predict.csv')
+    prediction_results.to_csv('results/Spec_Norm_GRU'+k+'predict.csv')
 
 
 # In[ ]:
