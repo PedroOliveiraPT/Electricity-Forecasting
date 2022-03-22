@@ -54,7 +54,7 @@ df.tail()
 
 
 # Average window
-df_2 = df.groupby(np.arange(len(df))//300).mean()
+df_2 = df.groupby(np.arange(len(df))//60).mean()
 print(df_2.shape)
 df_2.head()
 
@@ -112,7 +112,8 @@ from keras.layers import LSTM
 def create_model(features, timesteps=1):
     model = Sequential()
     #model.add(LayerNormalization(center=True, scale=True))
-    model.add(LSTM(30, input_shape=(timesteps, features)))
+    model.add(LSTM(30, return_sequences=True, input_shape=(timesteps, features)))
+    model.add(LSTM(10))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     
