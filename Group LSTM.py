@@ -110,7 +110,7 @@ def create_model(features, timesteps=1):
     return model
 
 
-# In[7]:
+# In[12]:
 
 
 def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
@@ -131,10 +131,10 @@ def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
     agg = pd.concat(cols, axis=1)
     agg.columns = names
     agg.dropna(inplace=True)
-    return agg
+    return agg.values
 
 
-# In[11]:
+# In[13]:
 
 
 history_window = 8 # 8*15secs = 120secs
@@ -142,7 +142,6 @@ prediction_window = 1 #predict 15 secs
 for k in corr_group:
     values = create_supervised_dataset(df_2, k, corr_group[k], n_in=history_window, n_out=prediction_window)
     len_values = values.shape[0]
-    print(values.head())
     # split into train and test sets 
     n_train_seconds = int(0.7*len_values) #70% dos valores
     n_cv_seconds =  int(0.9*len_values) #20% dos valores
