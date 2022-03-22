@@ -154,7 +154,7 @@ for k in corr_group:
     # reshape input to be 3D [samples, timesteps, features]
     train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
     cv_X = cv_X.reshape((cv_X.shape[0], 1, cv_X.shape[1]))
-    model = create_model(train_x[2])
+    model = create_model(train_X[2])
     history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(cv_X, cv_y), verbose=2, shuffle=False)
     history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
     history_results.to_csv('results/LSTM_'+k+'_history.csv')
