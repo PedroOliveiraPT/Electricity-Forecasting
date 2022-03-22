@@ -91,18 +91,19 @@ corr_group = {
 }
 
 
-# In[6]:
+# In[28]:
 
 
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
-from keras.layers import LayerNormalization
+from keras.layers import BatchNormalization
 
 # create network
 def create_model(features, timesteps=1):
+    print((timesteps, features))
     model = Sequential()
-    model.add(LayerNormalization(axis=0))
+    model.add(BatchNormalization())
     model.add(LSTM(30, input_shape=(timesteps, features)))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
@@ -110,7 +111,7 @@ def create_model(features, timesteps=1):
     return model
 
 
-# In[12]:
+# In[24]:
 
 
 def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
@@ -134,7 +135,7 @@ def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
     return agg.values
 
 
-# In[13]:
+# In[29]:
 
 
 history_window = 8 # 8*15secs = 120secs
@@ -154,7 +155,8 @@ for k in corr_group:
     # reshape input to be 3D [samples, timesteps, features]
     train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
     cv_X = cv_X.reshape((cv_X.shape[0], 1, cv_X.shape[1]))
-    model = create_model(train_X[2])
+    print(train_X.shape, train_y.shape, cv_X.shape, cv_y.shape)    
+    model = create_model(train_X.shape[2])
     history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(cv_X, cv_y), verbose=2, shuffle=False)
     history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
     history_results.to_csv('results/LSTM_'+k+'_history.csv')
@@ -172,6 +174,12 @@ for k in corr_group:
     prediction_results = pd.DataFrame(yhat)
     prediction_results.to_csv('results/LSTM'+k+'predict.csv')
     break
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
