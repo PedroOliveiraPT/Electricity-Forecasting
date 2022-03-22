@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[6]:
+# In[1]:
 
 
 import pandas as pd
 import numpy as np
 
 
-# In[7]:
+# In[2]:
 
 
 df = pd.read_csv("data/mongo_data.csv", index_col='ts')
@@ -18,7 +18,7 @@ print(df.shape)
 df.tail()
 
 
-# In[8]:
+# In[3]:
 
 
 def unique_cols(df):
@@ -30,7 +30,7 @@ print(df.shape)
 df.tail()
 
 
-# In[15]:
+# In[4]:
 
 
 # Average window
@@ -39,7 +39,7 @@ print(df_2.shape)
 df_2.head()
 
 
-# In[32]:
+# In[5]:
 
 
 corr_group = {
@@ -91,7 +91,7 @@ corr_group = {
 }
 
 
-# In[12]:
+# In[6]:
 
 
 from keras.models import Sequential
@@ -110,7 +110,7 @@ def create_model(features, timesteps=1):
     return model
 
 
-# In[37]:
+# In[7]:
 
 
 def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
@@ -134,13 +134,7 @@ def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
     return agg
 
 
-# In[31]:
-
-
-df_2[corr_group['P_SUM']].shift(2)
-
-
-# In[40]:
+# In[11]:
 
 
 history_window = 8 # 8*15secs = 120secs
@@ -148,12 +142,14 @@ prediction_window = 1 #predict 15 secs
 for k in corr_group:
     values = create_supervised_dataset(df_2, k, corr_group[k], n_in=history_window, n_out=prediction_window)
     len_values = values.shape[0]
-    print(len_values)
+    print(values.head())
     # split into train and test sets 
     n_train_seconds = int(0.7*len_values) #70% dos valores
-    n_test_seconds =  int(0.9*len_values) #20% dos valores
+    n_cv_seconds =  int(0.9*len_values) #20% dos valores
     train = values[:n_train_seconds, :]
-    test = values[n_train_seconds:n_test_seconds, :]
+    cv = values[n_train_seconds:n_cv_seconds, :]
+    print(train.shape)
+    break
     # split into input and outputs
     train_X, train_y = train[:, :-1], train[:, -1:]
     test_X, test_y = test[:, :-1], test[:, -1:]
@@ -178,6 +174,7 @@ for k in corr_group:
     yhat = model.predict(rtest_X)
     prediction_results = pd.DataFrame(yhat)
     prediction_results.to_csv('results/LSTM'+k+'predict.csv')
+    break
 
 
 # In[ ]:
