@@ -148,7 +148,7 @@ for k in corr_group:
     train = values[:n_train_seconds, :]
     cv = values[n_train_seconds:n_cv_seconds, :]
     print(train.shape)
-    break
+    
     # split into input and outputs
     train_X, train_y = train[:, :-1], train[:, -1:]
     test_X, test_y = test[:, :-1], test[:, -1:]
@@ -173,7 +173,6 @@ for k in corr_group:
     yhat = model.predict(rtest_X)
     prediction_results = pd.DataFrame(yhat)
     prediction_results.to_csv('results/LSTM'+k+'predict.csv')
-    break
 
 
 # In[ ]:
