@@ -73,7 +73,7 @@ scaled_df.head()
 # In[15]:
 
 
-scaled_df.plot()
+#scaled_df.plot()
 
 
 # In[16]:
