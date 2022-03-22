@@ -148,7 +148,7 @@ for k in corr:
 
     #Test for the day after
     print("Starting Test", k)
-    n_test_seconds =  int(0.5*len_values) #10% dos valores
+    n_test_seconds =  int(0.05*len_values) #10% dos valores
     test = values[-n_test_seconds:, :]
 
     test_X, test_y = test[:, :-1], test[:, -1:]
