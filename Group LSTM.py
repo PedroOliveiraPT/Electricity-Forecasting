@@ -147,32 +147,31 @@ for k in corr_group:
     n_cv_seconds =  int(0.9*len_values) #20% dos valores
     train = values[:n_train_seconds, :]
     cv = values[n_train_seconds:n_cv_seconds, :]
-    print(train.shape)
     
     # split into input and outputs
     train_X, train_y = train[:, :-1], train[:, -1:]
-    test_X, test_y = test[:, :-1], test[:, -1:]
+    cv_X, cv_y = cv[:, :-1], cv[:, -1:]
     # reshape input to be 3D [samples, timesteps, features]
     train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
-    test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
-    print(train_X.shape)
+    cv_X = cv_X.reshape((cv_X.shape[0], 1, cv_X.shape[1]))
     model = create_model(train_x[2])
-    history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+    history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(cv_X, cv_y), verbose=2, shuffle=False)
     history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
     history_results.to_csv('results/LSTM_'+k+'_history.csv')
     model.save('models/LSTM_'+k+'_model.h5')
 
     #Test for the day after
     print("Starting Test", k)
-    n_rtest_seconds =  int(0.1*len_values) #10% dos valores
-    rtest = values[-n_rtest_seconds:, :]
+    n_test_seconds =  int(0.1*len_values) #10% dos valores
+    test = values[-n_test_seconds:, :]
 
-    rtest_X, rtest_y = rtest[:, :-1], rtest[:, -1:]
-    rtest_X = rtest_X.reshape((rtest_X.shape[0], 1, rtest_X.shape[1]))
+    test_X, test_y = test[:, :-1], test[:, -1:]
+    test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
     # make a prediction
-    yhat = model.predict(rtest_X)
+    yhat = model.predict(test_X)
     prediction_results = pd.DataFrame(yhat)
     prediction_results.to_csv('results/LSTM'+k+'predict.csv')
+    break
 
 
 # In[ ]:
