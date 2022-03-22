@@ -182,7 +182,7 @@ for k in corr_group:
     # make a prediction
     yhat = model.predict(test_X)
     prediction_results = pd.DataFrame(yhat)
-    prediction_results.to_csv('results/Norm_LSTM'+k+'predict.csv')
+    prediction_results.to_csv('results/Norm_LSTM_'+k+'_predict.csv')
 
 
 # In[ ]:

@@ -170,7 +170,7 @@ for k in corr_group:
     model = create_model(train_X.shape[2])
     history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(cv_X, cv_y), verbose=2, shuffle=False)
     history_results = pd.DataFrame(list(zip(history.history['loss'], history.history['val_loss'])), columns=['Loss', 'Validation Loss'])
-    history_results.to_csv('results/Norm_LSTM_'+k+'_history.csv')
+    history_results.to_csv('results/Norm_LSTM_Drop_'+k+'_history.csv')
     model.save('models/Norm_LSTM_'+k+'_model.h5')
 
     #Test for the day after
@@ -183,7 +183,7 @@ for k in corr_group:
     # make a prediction
     yhat = model.predict(test_X)
     prediction_results = pd.DataFrame(yhat)
-    prediction_results.to_csv('results/Norm_LSTM'+k+'predict.csv')
+    prediction_results.to_csv('results/Norm_LSTM_Drop_'+k+'_predict.csv')
 
 
 # In[ ]:
