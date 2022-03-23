@@ -34,7 +34,7 @@ df.tail()
 
 
 # Average window
-df_2 = df.groupby(np.arange(len(df))//15).mean()
+df_2 = df.groupby(np.arange(len(df))//60).mean()
 print(df_2.shape)
 df_2.head()
 
