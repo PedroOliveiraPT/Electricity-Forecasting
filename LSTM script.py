@@ -7,6 +7,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+import sys
+import os
 from sklearn import metrics # for the evaluation
 
 # Model
