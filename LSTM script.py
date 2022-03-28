@@ -104,7 +104,7 @@ def write_results(model_desc, res):
         with open('./results/rmse_results.csv', 'w') as writer:
             writer.write("model,"+",".join(list(corr_group.keys)))
     with open('./results/rmse_results.csv', 'a') as writer:
-        writer.append(model_desc+","+",".join(res))
+        writer.write(model_desc+","+",".join(res)+'\n')
 # In[2]:
 
 if __name__ == '__main__':
@@ -125,8 +125,8 @@ if __name__ == '__main__':
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
-    history_window = sys.argv[1]
-    model_cells = sys.argv[2]
+    history_window = int(sys.argv[1])
+    model_cells = int(sys.argv[2])
     prediction_window = 1
 
     rmse_res = []
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         n_cv_seconds =  int(0.9*len_values) #20% dos valores
         train = values[:n_train_seconds, :]
         cv = values[n_train_seconds:n_cv_seconds, :]
-        
+
         # split into input and outputs
         train_X, train_y = train[:, :-1], train[:, -1:]
         cv_X, cv_y = cv[:, :-1], cv[:, -1:]
@@ -157,6 +157,6 @@ if __name__ == '__main__':
         test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
         # make a prediction
         yhat = model.predict(test_X)
-        rmse_res.append(np.sqrt(mean_squared_error(test, fc)))
+        rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
     write_results(f"LSTM{model_cells}_{history_window}secs", rmse_res)
