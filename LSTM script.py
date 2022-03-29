@@ -104,7 +104,7 @@ def write_results(model_desc, res):
         with open('./results/rmse_results.csv', 'w') as writer:
             writer.write("model,"+",".join(list(corr_group.keys)))
     with open('./results/rmse_results.csv', 'a') as writer:
-        writer.append(model_desc+","+",".join(res))
+        writer.write(model_desc+","+",".join([f'{num:.3f}' for num in res])+'\n')
 # In[2]:
 
 if __name__ == '__main__':
@@ -125,10 +125,9 @@ if __name__ == '__main__':
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
-    history_window = sys.argv[1]
-    model_cells = sys.argv[2]
+    history_window = int(sys.argv[1])
+    model_cells = int(sys.argv[2])
     prediction_window = 1
-
     rmse_res = []
 
     for k in corr_group:
@@ -157,7 +156,7 @@ if __name__ == '__main__':
         test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
         # make a prediction
         yhat = model.predict(test_X)
-        print(yhat)
-        rmse_res.append(np.sqrt(metrics.mean_squared_error(test, yhat)))
+        rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
+
 
     write_results(f"LSTM{model_cells}_{history_window}secs", rmse_res)
