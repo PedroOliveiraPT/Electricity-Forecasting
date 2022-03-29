@@ -104,11 +104,10 @@ def write_results(model_desc, res):
         with open('./results/rmse_results.csv', 'w') as writer:
             writer.write("model,"+",".join(list(corr_group.keys)))
     with open('./results/rmse_results.csv', 'a') as writer:
-        writer.write(model_desc+","+",".join(res)+'\n')
+        writer.write(model_desc+","+",".join([f'{num:.3f}' for num in res])+'\n')
 # In[2]:
 
 if __name__ == '__main__':
-
     df = pd.read_csv("data/mongo_data.csv", index_col='ts')
     df = df.drop('Unnamed: 0', 1)
     df.index = pd.to_datetime(df.index)
