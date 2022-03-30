@@ -6,6 +6,6 @@ for i in {1..7..1}
         do 
 	    v=$((2 ** $i)) 
 	    echo "doing $v $j"
-	    python3 GRU\ script.py $v $j
+	    python3 GRU\ script.py $j $v
         done
     done
