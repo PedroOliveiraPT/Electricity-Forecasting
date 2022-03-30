@@ -22,7 +22,7 @@ from keras.layers import Dropout
 def create_model(dropout, features, timesteps=1):
     model = Sequential()
     model.add(GRU(10, input_shape=(timesteps, features)))
-    model.add(dropout)
+    model.add(Dropout(dropout))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     

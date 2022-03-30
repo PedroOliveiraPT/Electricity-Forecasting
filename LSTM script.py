@@ -17,7 +17,6 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from keras.layers import Dropout
-from torch import dropout
 
 # create network
 def create_model(dropout, features, timesteps=1):
