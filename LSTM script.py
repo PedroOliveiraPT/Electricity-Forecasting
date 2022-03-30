@@ -16,12 +16,14 @@ from sklearn import metrics # for the evaluation
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
-from keras.layers import LayerNormalization
+from keras.layers import Dropout
+from torch import dropout
 
 # create network
-def create_model(lstm_cells, features, timesteps=1):
+def create_model(dropout, features, timesteps=1):
     model = Sequential()
-    model.add(LSTM(lstm_cells, input_shape=(timesteps, features)))
+    model.add(LSTM(10, input_shape=(timesteps, features)))
+    model.add(Dropout(dropout))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     
@@ -125,8 +127,9 @@ if __name__ == '__main__':
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
-    history_window = int(sys.argv[1])
-    model_cells = int(sys.argv[2])
+    history_window = 15
+    model_cells = 10
+    dropout_rate = int(sys.argv[1])/100
     prediction_window = 1
     rmse_res = []
 
@@ -146,7 +149,7 @@ if __name__ == '__main__':
         train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
         cv_X = cv_X.reshape((cv_X.shape[0], 1, cv_X.shape[1]))
         model = create_model(model_cells, train_X.shape[2])
-        history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(cv_X, cv_y), shuffle=False)
+        history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(cv_X, cv_y), shuffle=False)
 
         #Test for the day after
         n_test_seconds =  int(0.1*len_values) #10% dos valores
@@ -159,4 +162,4 @@ if __name__ == '__main__':
         rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
 
-    write_results(f"LSTM{model_cells}_{history_window}secs", rmse_res)
+    write_results(f"LSTM10_15secs_dropout{int(sys.argv[1])}", rmse_res)
