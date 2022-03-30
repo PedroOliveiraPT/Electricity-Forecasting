@@ -16,12 +16,14 @@ from sklearn import metrics # for the evaluation
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
-from keras.layers import LayerNormalization
+from keras.layers import Dropout
+from torch import dropout
 
 # create network
-def create_model(lstm_cells, features, timesteps=1):
+def create_model(dropout, features, timesteps=1):
     model = Sequential()
-    model.add(LSTM(lstm_cells, input_shape=(timesteps, features)))
+    model.add(LSTM(10, input_shape=(timesteps, features)))
+    model.add(Dropout(dropout))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     
@@ -125,8 +127,9 @@ if __name__ == '__main__':
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
-    history_window = int(sys.argv[1])
-    model_cells = int(sys.argv[2])
+    history_window = 15
+    model_cells = 10
+    dropout_rate = int(sys.argv[1])/100
     prediction_window = 1
     rmse_res = []
 
@@ -159,4 +162,4 @@ if __name__ == '__main__':
         rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
 
-    write_results(f"LSTM{model_cells}_{history_window}secs", rmse_res)
+    write_results(f"LSTM10_15secs_dropout{dropout_rate}", rmse_res)
