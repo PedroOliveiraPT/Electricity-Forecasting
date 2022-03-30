@@ -147,7 +147,7 @@ if __name__ == '__main__':
         # reshape input to be 3D [samples, timesteps, features]
         train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
         cv_X = cv_X.reshape((cv_X.shape[0], 1, cv_X.shape[1]))
-        model = create_model(model_cells, train_X.shape[2])
+        model = create_model(dropout_rate, train_X.shape[2])
         history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(cv_X, cv_y), shuffle=False)
 
         #Test for the day after
