@@ -4,7 +4,8 @@ for i in {1..7..1}
     do
     for j in 15 30 45 60
         do 
-	    echo "doing $i $j"
-        v=$((2 ** $i)) 
+	    v=$((2 ** $i)) 
+	    echo "doing $v $j"
+	    python3 GRU\ script.py $v $j
         done
     done
