@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
     history_window = 15
     model_cells = 10
-    dropout_rate = int(sys.argv[1])/10
+    dropout_rate = int(sys.argv[1])/100
     prediction_window = 1
 
     rmse_res = []
