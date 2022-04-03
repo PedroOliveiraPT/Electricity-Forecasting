@@ -18,9 +18,10 @@ from keras.layers import Dense
 from keras.layers import GRU
 
 # create network
-def create_model(cells, features, timesteps=1):
+def create_model(dense_cell, features, timesteps=1):
     model = Sequential()
-    model.add(GRU(cells, input_shape=(timesteps, features)))
+    model.add(GRU(10, input_shape=(timesteps, features)))
+    model.add(Dense(dense_cell))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     
@@ -102,9 +103,8 @@ def write_results(model_desc, res):
     if not os.path.isfile('./results/rmse_results.csv'):
         with open('./results/rmse_results.csv', 'w') as writer:
             writer.write("model,"+",".join(list(corr_group.keys)))
-    with open('./results/rmse_results.csv', 'a') as writer:        
+    with open('./results/rmse_results.csv', 'a') as writer:
         writer.write(model_desc+","+",".join([f'{num:.3f}' for num in res])+'\n')
-
 # In[2]:
 
 if __name__ == '__main__':
@@ -125,10 +125,10 @@ if __name__ == '__main__':
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
-    history_window = int(sys.argv[1])
-    model_cells = int(sys.argv[2])
+    history_window = 15
+    model_cells = 10
+    dense_cells = int(sys.argv[1])
     prediction_window = 1
-
     rmse_res = []
 
     for k in corr_group:
@@ -146,7 +146,7 @@ if __name__ == '__main__':
         # reshape input to be 3D [samples, timesteps, features]
         train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
         cv_X = cv_X.reshape((cv_X.shape[0], 1, cv_X.shape[1]))
-        model = create_model(model_cells, train_X.shape[2])
+        model = create_model(dense_cells, train_X.shape[2])
         history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(cv_X, cv_y), shuffle=False)
 
         #Test for the day after
@@ -159,4 +159,5 @@ if __name__ == '__main__':
         yhat = model.predict(test_X)
         rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
-    write_results(f"GRU{model_cells}_{history_window}secs", rmse_res)
+
+    write_results(f"LSTM10_15secs_dropout{int(sys.argv[1])}", rmse_res)
