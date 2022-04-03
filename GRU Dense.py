@@ -160,4 +160,4 @@ if __name__ == '__main__':
         rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
 
-    write_results(f"LSTM10_15secs_dropout{int(sys.argv[1])}", rmse_res)
+    write_results(f"LSTM10_15secs_Dense{dense_cells}", rmse_res)

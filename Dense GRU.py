@@ -16,19 +16,13 @@ from sklearn import metrics # for the evaluation
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import GRU
-from keras.layers import Flatten
-from keras.layers import TimeDistributed
-from keras.layers.convolutional import Conv1D
-from keras.layers.convolutional import MaxPooling1D
 
 
 # create network
-def create_model(features, timesteps=1):
+def create_model(dense_cell, features, timesteps=1):
     model = Sequential()
-    model.add(TimeDistributed(Conv1D(filters=64, kernel_size=1, activation='relu'), input_shape=(None, timesteps, features)))
-    model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
-    model.add(TimeDistributed(Flatten()))
-    model.add(GRU(10, activation='relu'))
+    model.add(Dense(dense_cell))
+    model.add(GRU(10, input_shape=(timesteps, features)))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     
@@ -169,4 +163,4 @@ if __name__ == '__main__':
         rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
 
-    write_results(f"LSTM10_15secs_dropout{int(sys.argv[1])}", rmse_res)
+    write_results(f"Dense{int(sys.argv[1])}_GRU10_15secs_", rmse_res)
