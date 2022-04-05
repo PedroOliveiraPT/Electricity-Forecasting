@@ -18,5 +18,5 @@ for i in {2..5}
     do
     
         python3 Stack\ Dense\ GRU.py $i
-        python3 Stack\ Dense\ LSTM.py $i
+        python3 Stacked\ Dense\ LSTM.py $i
     done

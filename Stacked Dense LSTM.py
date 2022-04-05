@@ -160,6 +160,7 @@ if __name__ == '__main__':
         test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
         # make a prediction
         yhat = model.predict(test_X)
+        yhat = yhat.reshape(yhat.shape[0], yhat.shape[1])
         rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
 

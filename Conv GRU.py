@@ -12,19 +12,26 @@ import os
 from sklearn import metrics # for the evaluation
 
 # Model
+
+# Model
+
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import GRU
-from keras.layers import Flatten
+from keras.layers import Conv1D
 
 # create network
 def create_model(n_stack, features, timesteps=1):
     model = Sequential()
-    model.add(Dense(20))
-    model.add(GRU(10, input_shape=(timesteps, features), return_sequences=True))
+    model.add(Conv1D(filters=32, kernel_size=3,
+                      strides=1, padding="causal",
+                      activation="relu",
+                      input_shape=[timesteps, features]))
     for i in range(n_stack-1):
-        model.add(Dense(20))
-        model.add(GRU(10, return_sequences=True))
+        model.add(Conv1D(filters=32, kernel_size=3,
+                      strides=1, padding="causal",
+                      activation="relu"))
+    model.add(GRU(10, return_sequences=True))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     
@@ -164,4 +171,4 @@ if __name__ == '__main__':
         rmse_res.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
 
-    write_results(f"GRU10_15secs_Stacked{n_stacks}", rmse_res)
+    write_results(f"GRU10_15secs_StackConv{n_stacks}", rmse_res)
