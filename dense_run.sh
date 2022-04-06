@@ -13,10 +13,3 @@ for i in {10..50..10}
         python3 Dense\ GRU.py $i
         python3 Dense\ LSTM.py $i
     done
-
-for i in {2..5}
-    do
-    
-        python3 Stack\ Dense\ GRU.py $i
-        python3 Stacked\ Dense\ LSTM.py $i
-    done
