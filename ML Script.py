@@ -56,7 +56,7 @@ if __name__ == '__main__':
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
-    callback = EarlyStopping(monitor='val_loss', patience=3)
+    callback = EarlyStopping(monitor='val_loss', patience=5)
     history_window = 15
     prediction_window = 1
 
@@ -81,6 +81,7 @@ if __name__ == '__main__':
         train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
         cv_X = cv_X.reshape((cv_X.shape[0], 1, cv_X.shape[1]))
         model_name = None
+        change_result = False
         if model_type == 'SimpleLSTM':
             import SimpleLSTM
             model_cells = int(sys.argv[2])
@@ -124,21 +125,25 @@ if __name__ == '__main__':
         elif model_type == 'StackedLSTM':
             import StackedLSTM
             nstacks = int(sys.argv[2])
+            change_result = True
             model_name = f"LSTM10_{nstacks}Stacks_15secs"
             model = StackedLSTM.create_model(nstacks, train_X.shape[2])
         elif model_type == 'StackedGRU':
             import StackedGRU
             nstacks = int(sys.argv[2])
+            change_result = True
             model_name = f"GRU10_{nstacks}Stacks_15secs"
             model = StackedGRU.create_model(nstacks, train_X.shape[2])
         elif model_type == 'ConvLSTM':
             import ConvLSTM
             nstacks = int(sys.argv[2])
+            change_result = True
             model_name = f"LSTM10_{nstacks}ConvStacks_15secs"
             model = ConvLSTM.create_model(nstacks, train_X.shape[2])
         elif model_type == 'ConvGRU':
             import ConvGRU
             nstacks = int(sys.argv[2])
+            change_result = True
             model_name = f"GRU10_{nstacks}ConvStacks_15secs"
             model = ConvGRU.create_model(nstacks, train_X.shape[2])
 
@@ -159,6 +164,8 @@ if __name__ == '__main__':
             test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
             # make a prediction
             yhat = model.predict(test_X)
+            if change_result:
+                yhat = yhat.reshape(yhat.shape[0], yhat.shape[1])
             results.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
             logging.info(f"{k} for {model_name}, {s} was run for {len(history.history['loss'])} epochs")
         rmse_res.append(sum(results)/3)
