@@ -8,8 +8,8 @@ from keras.callbacks import EarlyStopping
 import tensorflow as tf
 import logging
 
-logging.basicConfig(format='%(asctime)s %(message)s', filename='training.log', encoding='utf-8', level=logging.DEBUG)
-
+logging.basicConfig(format='%(asctime)s %(message)s', filename='training.log', level=logging.DEBUG)
+logging.info('Started training')
 
 def unique_cols(df):
     a = df.to_numpy() # df.values (pandas<0.24)
@@ -147,6 +147,7 @@ if __name__ == '__main__':
             break
         results = []
         for s in [SEED1, SEED2, SEED3]:
+            logging.info(f"{k} for {model_name} started training with {s}")
             tf.keras.utils.set_random_seed(s)
             history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(cv_X, cv_y), verbose=0, shuffle=False, callbacks=[callback])
 
