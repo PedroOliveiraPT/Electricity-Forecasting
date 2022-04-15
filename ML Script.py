@@ -158,6 +158,18 @@ if __name__ == '__main__':
             rate = int(sys.argv[3])
             model_name = f'BiGRU{ncells}_Dropout{rate}_15secs'
             model = BiGRU.create_model(ncells, rate/100, train_X.shape[2])
+        elif model_type == 'AttentionBiLSTM':
+            import AttentionBiLSTM
+            ncells = int(sys.argv[2])
+            rate = int(sys.argv[3])
+            model_name = f'AttentionBiLSTM{ncells}_Dropout{rate}_15secs'
+            model = AttentionBiLSTM.create_model(ncells, rate/100, train_X.shape[2])
+        elif model_type == 'AttentionBiGRU':
+            import AttentionBiGRU
+            ncells = int(sys.argv[2])
+            rate = int(sys.argv[3])
+            model_name = f'AttentionBiGRU{ncells}_Dropout{rate}_15secs'
+            model = AttentionBiGRU.create_model(ncells, rate/100, train_X.shape[2])
         
         if model is None:
             logging.warning(f"No model found for {model_type}")
