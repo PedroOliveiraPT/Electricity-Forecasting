@@ -100,7 +100,7 @@ if __name__ == '__main__':
         elif model_type == 'DropoutGRU':
             import DropoutGRU
             rate = int(sys.argv[2])/100
-            model_name = f"LSTM10_15secs_Dropout{sys.argv[2]}"
+            model_name = f"GRU10_15secs_Dropout{sys.argv[2]}"
             model = DropoutGRU.create_model(rate, train_X.shape[2])
         elif model_type == 'DenseLSTM':
             import DenseLSTM
@@ -146,7 +146,19 @@ if __name__ == '__main__':
             change_result = True
             model_name = f"GRU10_{nstacks}ConvStacks_15secs"
             model = ConvGRU.create_model(nstacks, train_X.shape[2])
-
+        elif model_type == 'BiLSTM':
+            import BiLSTM
+            ncells = int(sys.argv[2])
+            rate = int(sys.argv[3])
+            model_name = f'BiLSTM{ncells}_Dropout{rate}_15secs'
+            model = BiLSTM.create_model(ncells, rate/100, train_X.shape[2])
+        elif model_type == 'BiGRU':
+            import BiGRU
+            ncells = int(sys.argv[2])
+            rate = int(sys.argv[3])
+            model_name = f'BiGRU{ncells}_Dropout{rate}_15secs'
+            model = BiGRU.create_model(ncells, rate/100, train_X.shape[2])
+        
         if model is None:
             logging.warning(f"No model found for {model_type}")
             break
