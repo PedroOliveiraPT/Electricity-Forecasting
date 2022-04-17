@@ -6,6 +6,7 @@ for i in {3..8..1}
         do 
 	    v=$((2 ** $i)) 
 	    python3 ML\ script.py BiLSTM $v $j
-	    python3 ML\ script.py BiGRU $v $j
+	    python3 ML\ script.py AttentionBiLSTM $v $j
+
         done
     done
