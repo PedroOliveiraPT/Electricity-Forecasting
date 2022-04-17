@@ -56,7 +56,7 @@ if __name__ == '__main__':
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
-    callback = EarlyStopping(monitor='val_loss', patience=5)
+    callback = EarlyStopping(monitor='val_loss', patience=10)
     history_window = 15
     prediction_window = 1
 
