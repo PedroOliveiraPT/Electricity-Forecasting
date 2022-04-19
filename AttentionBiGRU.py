@@ -35,3 +35,5 @@ def create_model(cells, rate, features, timesteps=1):
     model.add(attention(return_sequences=True)) # receive 3D and output 3D
     model.add(Dropout(rate))
     model.add(Dense(1, activation='sigmoid'))
+
+    

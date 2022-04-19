@@ -37,13 +37,13 @@ def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
     return agg.values
 
 def write_results(model_desc, res):
-    with open('./results/rmse_results2.csv', 'a') as writer:
+    with open('./results/rmse_results3.csv', 'a') as writer:
         writer.write(model_desc+","+",".join([f'{num:.3f}' for num in res])+'\n')
 
 
 if __name__ == '__main__':
 
-    df = pd.read_csv("data/mongo_data.csv", index_col='ts')
+    df = pd.read_csv("data/mongo_av101_data", index_col='ts')
     df = df.drop('Unnamed: 0', 1)
     df.index = pd.to_datetime(df.index)
 
