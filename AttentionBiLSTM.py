@@ -31,7 +31,7 @@ class attention(Layer):
 
 def create_model(cells, rate, features, timesteps=1):
     model = Sequential()
-    model.add(Bidirectional(LSTM(cells, input_shape=(timesteps, features))))
+    model.add(Bidirectional(LSTM(cells, input_shape=(timesteps, features), return_sequences=True)))
     model.add(attention(return_sequences=True)) # receive 3D and output 3D
     model.add(Dropout(rate))
     model.add(Dense(1, activation='sigmoid'))

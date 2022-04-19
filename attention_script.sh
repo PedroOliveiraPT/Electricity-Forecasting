@@ -5,6 +5,6 @@ for i in {3..8..1}
     for j in {10..50..10}
         do 
 	    v=$((2 ** $i)) 
-	    python3 ML\ script.py AttentionBiGRU $v $j
+	    python3 ML\ script.py AttentionBiLSTM $v $j
         done
     done
