@@ -161,6 +161,7 @@ if __name__ == '__main__':
         elif model_type == 'AttentionBiLSTM':
             import AttentionBiLSTM
             ncells = int(sys.argv[2])
+            change_result = True
             rate = int(sys.argv[3])
             model_name = f'AttentionBiLSTM{ncells}_Dropout{rate}_15secs'
             model = AttentionBiLSTM.create_model(ncells, rate/100, train_X.shape[2])
