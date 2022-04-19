@@ -40,3 +40,21 @@ for i in {1..5}
         python3 ML\ Script.py ConvGRU $i
     done
 
+#!/bin/bash
+
+for i in {3..8..1}
+    do
+    for j in {10..50..10}
+        do 
+	    v=$((2 ** $i)) 
+	    python3 ML\ Script.py BiLSTM $v $j
+	    python3 ML\ Script.py AttentionBiLSTM $v $j
+        done
+    done
+
+#!/bin/bash
+
+for i in {200..1000..200}
+    do  
+        python3 XGBoost.py $i
+    done
