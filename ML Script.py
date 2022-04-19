@@ -178,7 +178,7 @@ if __name__ == '__main__':
         for s in [SEED1, SEED2, SEED3]:
             logging.info(f"{k} for {model_name} started training with {s}")
             tf.keras.utils.set_random_seed(s)
-            history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(cv_X, cv_y), verbose=0, shuffle=False, callbacks=[callback])
+            history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(cv_X, cv_y), verbose=1, shuffle=False, callbacks=[callback])
 
             #Test for the day after
             n_test_seconds =  int(0.1*len_values) #10% dos valores
