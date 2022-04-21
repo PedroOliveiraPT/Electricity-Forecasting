@@ -18,7 +18,6 @@ class attention(Layer):
         super(attention,self).build(input_shape)
         
     def call(self,x):
-        def call(self, x):
         e = K.tanh(K.dot(x,self.W)+self.b)
         a = K.softmax(e, axis=1)
         output = x*a
