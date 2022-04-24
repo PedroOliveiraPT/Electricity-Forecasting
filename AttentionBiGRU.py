@@ -12,9 +12,9 @@ class attention(Layer):
     def build(self, input_shape):
         
         self.W=self.add_weight(name="att_weight", shape=(input_shape[-1],1),
-                               initializer="normal")
+                               initializer="normal",trainable=True)
         self.b=self.add_weight(name="att_bias", shape=(input_shape[1],1),
-                               initializer="zeros")
+                               initializer="zeros",trainable=True)
         
         super(attention,self).build(input_shape)
         
@@ -35,5 +35,10 @@ def create_model(cells, rate, features, timesteps=1):
     model.add(attention(return_sequences=True)) # receive 3D and output 3D
     model.add(Dropout(rate))
     model.add(Dense(1, activation='sigmoid'))
+    
+    model.compile(loss='mae', optimizer='adam')
+
+    return model
+
 
     
