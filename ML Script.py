@@ -43,7 +43,7 @@ def write_results(model_desc, res):
 
 if __name__ == '__main__':
 
-    df = pd.read_csv("data/mongo_av101_data", index_col='ts')
+    df = pd.read_csv("data/mongo_filtered_av101_mins.csv", index_col='ts')
     df = df.drop('Unnamed: 0', 1)
     df.index = pd.to_datetime(df.index)
 
@@ -168,6 +168,7 @@ if __name__ == '__main__':
         elif model_type == 'AttentionBiGRU':
             import AttentionBiGRU
             ncells = int(sys.argv[2])
+            change_result = True
             rate = int(sys.argv[3])
             model_name = f'AttentionBiGRU{ncells}_Dropout{rate}_15secs'
             model = AttentionBiGRU.create_model(ncells, rate/100, train_X.shape[2])

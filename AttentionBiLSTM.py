@@ -27,7 +27,6 @@ class attention(Layer):
         return K.sum(output, axis=1)
 
 def create_model(cells, rate, features, timesteps=1):
-    print("here")
     model = Sequential()
     model.add(Bidirectional(LSTM(cells, input_shape=(timesteps, features), return_sequences=True)))
     model.add(attention(return_sequences=True)) # receive 3D and output 3D

@@ -49,6 +49,8 @@ for i in {3..8..1}
 	    v=$((2 ** $i)) 
 	    python3 ML\ Script.py BiLSTM $v $j
 	    python3 ML\ Script.py AttentionBiLSTM $v $j
+        python3 ML\ Script.py BiGRU $v $j
+	    python3 ML\ Script.py AttentionBiGRU $v $j
         done
     done
 
