@@ -62,3 +62,16 @@ CORR_GROUP = {
     'H_TDH_U_L2_N': ['H_TDH_U_L2_N', 'H_TDH_U_L3_N', 'H_TDH_U_L1_N'],
     
 }
+
+AD_THRESHOLD = {
+    'P_SUM': 0.017,
+    'U_L1_N': 0.047,
+    'I_SUM': 0.08,
+    'H_TDH_I_L3_N': 0.06,
+    'F': 0.054,
+    'ReacEc_L1': 0.016,
+    'RealE_SUM': 0.005,
+    'C_phi_L3': 0.075,
+    'ReacEc_L3': 0.005,
+    'H_TDH_U_L2_N': 0.04
+}
