@@ -38,19 +38,19 @@ def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
 
 def write_results(model_desc, res):
     with open('./results/rmse_results3.csv', 'a') as writer:
-        writer.write(model_desc+","+",".join([f'{num:.3f}' for num in res])+'\n')
+        writer.write(model_desc+","+",".join([f'{num:.6f}' for num in res])+'\n')
 
 
 if __name__ == '__main__':
 
     df = pd.read_csv("data/mongo_filtered_av101_mins.csv", index_col='ts')
-    df = df.drop('Unnamed: 0', 1)
+    #df = df.drop('Unnamed: 0', 1)
     df.index = pd.to_datetime(df.index)
 
-    df = df.loc[:,np.invert(unique_cols(df))]
+    df_2 = df.loc[:,np.invert(unique_cols(df))]
 
     # Average window
-    df_2 = df.groupby(np.arange(len(df))//60).mean()
+    # df_2 = df.groupby(np.arange(len(df))//60).mean()
 
     scaler = MinMaxScaler()
     d = scaler.fit_transform(df_2)
