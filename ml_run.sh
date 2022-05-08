@@ -1,5 +1,7 @@
 #!/bin/bash
 
+python3 LinRegression\ Script.py
+
 for i in {10..100..10}
     do
         python3 ML\ Script.py SimpleLSTM $i
@@ -54,9 +56,4 @@ for i in {3..8..1}
         done
     done
 
-#!/bin/bash
-
-for i in {200..1000..200}
-    do  
-        python3 XGBoost.py $i
-    done
+python3 Final\ Models.py

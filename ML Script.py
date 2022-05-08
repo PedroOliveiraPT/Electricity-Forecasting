@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import sys
 from sklearn import metrics # for the evaluation
-from settings import CORR_GROUP, SEED1, SEED2, SEED3
+from settings import CORR_GROUP, SEED1, SEED2, SEED3, INPUT_FILE, OUTPUT_FILE
 from keras.callbacks import EarlyStopping
 import tensorflow as tf
 import logging
@@ -37,13 +37,13 @@ def create_supervised_dataset(df, target, feats, n_in=1, n_out=1):
     return agg.values
 
 def write_results(model_desc, res):
-    with open('./results/rmse_results3.csv', 'a') as writer:
+    with open(OUTPUT_FILE, 'a') as writer:
         writer.write(model_desc+","+",".join([f'{num:.6f}' for num in res])+'\n')
 
 
 if __name__ == '__main__':
 
-    df = pd.read_csv("data/mongo_filtered_av101_mins.csv", index_col='ts')
+    df = pd.read_csv(INPUT_FILE, index_col='ts')
     #df = df.drop('Unnamed: 0', 1)
     df.index = pd.to_datetime(df.index)
 
@@ -86,91 +86,91 @@ if __name__ == '__main__':
             import SimpleLSTM
             model_cells = int(sys.argv[2])
             model = SimpleLSTM.create_model(model_cells, train_X.shape[2])
-            model_name = f"LSTM{model_cells}_15secs"
+            model_name = f"SimpleLSTM_{model_cells}_15secs"
         elif model_type == 'SimpleGRU':
             import SimpleGRU
             model_cells = int(sys.argv[2])
-            model_name = f"GRU{model_cells}_15secs"
+            model_name = f"SimpleGRU_{model_cells}_15secs"
             model = SimpleGRU.create_model(model_cells, train_X.shape[2])
         elif model_type == 'DropoutLSTM':
             import DropoutLSTM
             rate = int(sys.argv[2])/100
-            model_name = f"LSTM10_15secs_Dropout{sys.argv[2]}"
+            model_name = f"DropoutLSTM_{sys.argv[2]}_15secs"
             model = DropoutLSTM.create_model(rate, train_X.shape[2])
         elif model_type == 'DropoutGRU':
             import DropoutGRU
             rate = int(sys.argv[2])/100
-            model_name = f"GRU10_15secs_Dropout{sys.argv[2]}"
+            model_name = f"DropoutGRU_{sys.argv[2]}_15secs"
             model = DropoutGRU.create_model(rate, train_X.shape[2])
         elif model_type == 'DenseLSTM':
             import DenseLSTM
             dense_cells = int(sys.argv[2])
-            model_name = f"Dense{dense_cells}_LSTM10_15secs"
+            model_name = f"DenseLSTM_{dense_cells}_15secs"
             model = DenseLSTM.create_model(dense_cells, train_X.shape[2])
         elif model_type == 'DenseGRU':
             import DenseGRU
             dense_cells = int(sys.argv[2])
-            model_name = f"Dense{dense_cells}_GRU10_15secs"
+            model_name = f"DenseGRU_{dense_cells}_15secs"
             model = DenseGRU.create_model(dense_cells, train_X.shape[2])
         elif model_type == 'LSTMDense':
             import LSTMDense
             dense_cells = int(sys.argv[2])
-            model_name = f"LSTM10_Dense{dense_cells}_15secs"
+            model_name = f"LSTMDense_{dense_cells}_15secs"
             model = LSTMDense.create_model(dense_cells, train_X.shape[2])
         elif model_type == 'GRUDense':
             import GRUDense
             dense_cells = int(sys.argv[2])
-            model_name = f"GRU10_Dense{dense_cells}_15secs"
+            model_name = f"GRUDense_{dense_cells}_15secs"
             model = GRUDense.create_model(dense_cells, train_X.shape[2])
         elif model_type == 'StackedLSTM':
             import StackedLSTM
             nstacks = int(sys.argv[2])
             change_result = True
-            model_name = f"LSTM10_{nstacks}Stacks_15secs"
+            model_name = f"StackedLSTM_{nstacks}_15secs"
             model = StackedLSTM.create_model(nstacks, train_X.shape[2])
         elif model_type == 'StackedGRU':
             import StackedGRU
             nstacks = int(sys.argv[2])
             change_result = True
-            model_name = f"GRU10_{nstacks}Stacks_15secs"
+            model_name = f"StackedGRU_{nstacks}_15secs"
             model = StackedGRU.create_model(nstacks, train_X.shape[2])
         elif model_type == 'ConvLSTM':
             import ConvLSTM
             nstacks = int(sys.argv[2])
             change_result = True
-            model_name = f"LSTM10_{nstacks}ConvStacks_15secs"
+            model_name = f"ConvLSTM10_{nstacks}_15secs"
             model = ConvLSTM.create_model(nstacks, train_X.shape[2])
         elif model_type == 'ConvGRU':
             import ConvGRU
             nstacks = int(sys.argv[2])
             change_result = True
-            model_name = f"GRU10_{nstacks}ConvStacks_15secs"
+            model_name = f"ConvGRU_{nstacks}_15secs"
             model = ConvGRU.create_model(nstacks, train_X.shape[2])
         elif model_type == 'BiLSTM':
             import BiLSTM
             ncells = int(sys.argv[2])
             rate = int(sys.argv[3])
-            model_name = f'BiLSTM{ncells}_Dropout{rate}_15secs'
+            model_name = f'BiLSTM_{ncells}_{rate}_15secs'
             model = BiLSTM.create_model(ncells, rate/100, train_X.shape[2])
         elif model_type == 'BiGRU':
             import BiGRU
             ncells = int(sys.argv[2])
             rate = int(sys.argv[3])
-            model_name = f'BiGRU{ncells}_Dropout{rate}_15secs'
+            model_name = f'BiGRU_{ncells}_{rate}_15secs'
             model = BiGRU.create_model(ncells, rate/100, train_X.shape[2])
         elif model_type == 'AttentionBiLSTM':
             import AttentionBiLSTM
             ncells = int(sys.argv[2])
             change_result = True
             rate = int(sys.argv[3])
-            model_name = f'AttentionBiLSTM{ncells}_Dropout{rate}_15secs'
+            model_name = f'AttentionBiLSTM_{ncells}_{rate}_15secs'
             model = AttentionBiLSTM.create_model(ncells, rate/100, train_X.shape[2])
         elif model_type == 'AttentionBiGRU':
             import AttentionBiGRU
             ncells = int(sys.argv[2])
             change_result = True
             rate = int(sys.argv[3])
-            model_name = f'AttentionBiGRU{ncells}_Dropout{rate}_15secs'
+            model_name = f'AttentionBiGRU_{ncells}_{rate}_15secs'
             model = AttentionBiGRU.create_model(ncells, rate/100, train_X.shape[2])
         
         if model is None:

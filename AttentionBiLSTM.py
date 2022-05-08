@@ -5,7 +5,7 @@ from keras import backend as K
 
 class attention(Layer):
     
-    def __init__(self, return_sequences=True):
+    def __init__(self, return_sequences=True, **kwargs):
         self.return_sequences = return_sequences
         super(attention,self).__init__()
         
@@ -25,6 +25,13 @@ class attention(Layer):
 
             return output
         return K.sum(output, axis=1)
+    
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            'return_sequences': self.return_sequences 
+        })
+        return config
 
 def create_model(cells, rate, features, timesteps=1):
     model = Sequential()

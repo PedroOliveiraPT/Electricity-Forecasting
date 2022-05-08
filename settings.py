@@ -63,6 +63,9 @@ CORR_GROUP = {
     
 }
 
+IMPORT_FILE="data/mongo_filtered_av101_mins.csv"
+OUTPUT_FILE='./results/rmse_results_final.csv'
+
 AD_THRESHOLD = {
     'P_SUM': 0.017,
     'U_L1_N': 0.047,
