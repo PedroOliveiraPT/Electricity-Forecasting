@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from settings import CORR_GROUP, IMPORT_FILE, OUTPUT_FILE
+from settings import CORR_GROUP, INPUT_FILE, OUTPUT_FILE
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics # for the evaluation
@@ -31,10 +31,10 @@ def unique_cols(df):
     return (a[0] == a).all(0)
 
 if __name__ == '__main__':
-    df = pd.read_csv(IMPORT_FILE, index_col='ts')
+    df = pd.read_csv(INPUT_FILE, index_col='ts')
     df.index = pd.to_datetime(df.index)
     
-    df = df.loc[:,np.invert(unique_cols(df))]
+    df_2 = df.loc[:,np.invert(unique_cols(df))]
     
 
     scaler = MinMaxScaler()
@@ -72,4 +72,4 @@ if __name__ == '__main__':
     
     with open(OUTPUT_FILE, 'w') as writer:
         writer.write("model,"+','.join(CORR_GROUP)+"\n")
-        writer.write("LinRegression,"+",".join([f'{num:.6f}' for num in res])+'\n')
+        writer.write("LinRegression,"+",".join([f'{num:.6f}' for num in results])+'\n')

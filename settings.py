@@ -1,6 +1,6 @@
-SEED1=1685077
-SEED2=4120939
-SEED3=7755379
+SEED1=477506087
+SEED2=832683763
+SEED3=584772787
 CORR_GROUP = {
     'P_SUM': #Var to Predict
         ['S_SUM',
@@ -63,7 +63,7 @@ CORR_GROUP = {
     
 }
 
-IMPORT_FILE="data/mongo_filtered_av101_mins.csv"
+INPUT_FILE="data/mongo_filtered_av101_mins.csv"
 OUTPUT_FILE='./results/rmse_results_final.csv'
 
 AD_THRESHOLD = {
