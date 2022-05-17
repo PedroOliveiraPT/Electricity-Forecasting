@@ -48,6 +48,7 @@ if __name__ == '__main__':
     # df_2 = df.groupby(np.arange(len(df))//60).mean()
 
     scaler = MinMaxScaler()
+    scaler = MinMaxScaler()
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
     results = []
@@ -65,12 +66,16 @@ if __name__ == '__main__':
         train_X, train_y = train[:, :-1], train[:, -1:]
         test_X, test_y = cv[:, :-1], cv[:, -1:]
         automl = autosklearn.regression.AutoSklearnRegressor(
-            time_left_for_this_task=6*3600,
-            per_run_time_limit=1800,
+            time_left_for_this_task=2*3600,
+            per_run_time_limit=600,
             tmp_folder='./tmp/autosklearn_regression_'+k+'_tmp',
         )
         automl.fit(train_X, train_y, dataset_name=k)
         test_predictions = automl.predict(test_X)
-        results.append(sklearn.metrics.mean_squared_error(test_y, test_predictions, squared=False))
+        try:
+            results.append(sklearn.metrics.mean_squared_error(test_y, test_predictions, squared=False))
+        except Exception as e:
+            logging.exception(e)
+            results.append(1)
     with open(OUTPUT_FILE, 'a') as writer:
         writer.write("AutoML,"+",".join([f'{num:.6f}' for num in results])+'\n')
