@@ -70,9 +70,9 @@ if __name__ == '__main__':
             per_run_time_limit=600,
             tmp_folder='./tmp/autosklearn_regression_'+k+'_tmp',
         )
-        automl.fit(train_X, train_y, dataset_name=k)
-        test_predictions = automl.predict(test_X)
         try:
+            automl.fit(train_X, train_y, dataset_name=k)
+            test_predictions = automl.predict(test_X)
             results.append(sklearn.metrics.mean_squared_error(test_y, test_predictions, squared=False))
         except Exception as e:
             logging.exception(e)
