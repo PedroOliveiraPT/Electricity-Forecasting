@@ -63,8 +63,8 @@ CORR_GROUP = {
     
 }
 
-INPUT_FILE="data/mongo_filtered_av101_mins.csv"
-OUTPUT_FILE='./results/rmse_results_final.csv'
+INPUT_FILE="data/influx_data_filtered.csv"
+OUTPUT_FILE='./results/rmse_influx_results.csv'
 
 AD_THRESHOLD = {
     'P_SUM': 0.017,
