@@ -54,7 +54,7 @@ predict_until = 1
 lookback = 15
 
 for k in CORR_GROUP:
-    logging.INFO("started training " + k)
+    logging.info("started training " + k)
     data_train = scaled_df[:train_split]
     data_cv = scaled_df[train_split:val_split]
     
@@ -77,6 +77,7 @@ for k in CORR_GROUP:
         max_trials=100,
         project_name=f'autokeras_ml/{k}_forecaster',
         objective="mean_squared_error",
+        overwrite=True
     )
 
     # Train the TimeSeriesForecaster with train data
@@ -86,10 +87,9 @@ for k in CORR_GROUP:
         validation_data=(data_x_val, data_y_val),
         batch_size=96,
         epochs=20,
-        overwrite=True
     )
 
     model = clf.export_model()
-    logging.INFO("exporting " + k)
+    logging.info("exporting " + k)
     model.save(f'models/{k}_autokeras.h5')
     # Evaluate the best model with testing data.
