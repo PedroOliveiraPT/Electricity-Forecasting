@@ -9,7 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 import logging
 
 logging.basicConfig(format='%(asctime)s %(message)s', filename='autokeras.log', level=logging.DEBUG)
-logging.info('Started training')
+logging.info('Started training')\
 
 def unique_cols(df):
     a = df.to_numpy() # df.values (pandas<0.24)
@@ -54,6 +54,7 @@ predict_until = 1
 lookback = 15
 
 for k in CORR_GROUP:
+    logging.info("started training " + k)
     data_train = scaled_df[:train_split]
     data_cv = scaled_df[train_split:val_split]
     
@@ -76,6 +77,7 @@ for k in CORR_GROUP:
         max_trials=100,
         project_name=f'autokeras_ml/{k}_forecaster',
         objective="mean_squared_error",
+        overwrite=True
     )
 
     # Train the TimeSeriesForecaster with train data
@@ -83,14 +85,11 @@ for k in CORR_GROUP:
         x=data_x,
         y=data_y,
         validation_data=(data_x_val, data_y_val),
-        batch_size=32,
-        epochs=50,
-        verbose=False
+        batch_size=96,
+        epochs=20,
     )
 
     model = clf.export_model()
+    logging.info("exporting " + k)
     model.save(f'models/{k}_autokeras.h5')
     # Evaluate the best model with testing data.
-    results.append(model.evaluate(data_x_test, data_y_test)[0])
-with open(OUTPUT_FILE, 'a') as writer:
-    writer.write("AutoKeras,"+",".join([f'{num:.6f}' for num in results])+'\n')
