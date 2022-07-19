@@ -74,7 +74,7 @@ for var in CORR_GROUP:
     for index, row in scaled_df.iterrows():
 
         if counter >= history_window:
-            if row[var + ' AD'] != True or row[var + ' AD'] != False:
+            if row[var + ' AD'] == True or row[var + ' AD'] == False:
                 tensor = np.array(features).reshape(-1, history_window, len(CORR_GROUP[var]))
                 res = model.predict(tensor, verbose=0)
                 ad_detected = abs(res - row[var]) > AD_THRESHOLD[var]
