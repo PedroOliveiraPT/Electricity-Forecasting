@@ -23,8 +23,9 @@ logging.info('Started training')
 def create_model(features, timesteps=1):
     model = Sequential()
     model.add(InputLayer(input_shape=(timesteps, features)))
-    model.add(Bidirectional(GRU(features, input_shape=(timesteps, 2*features), activation='tanh')))
-    model.add(Bidirectional(GRU(features, input_shape=(timesteps, 2*features), activation='tanh')))
+    model.add(Bidirectional(GRU(features, activation='tanh', return_sequences=True), trainable=True))
+    model.add(Bidirectional(GRU(features, activation='tanh', return_sequences=True), trainable=True))
+    model.add(Bidirectional(GRU(features, activation='tanh'), trainable=True))
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     
@@ -88,7 +89,7 @@ if __name__ == '__main__':
         train_X = train_X.reshape((-1, history_window, feats))
         cv_X = cv_X.reshape((-1, history_window, feats))
         model = create_model(feats, timesteps=history_window)
-        history = model.fit(train_X, train_y, epochs=100, batch_size=96, validation_data=(cv_X, cv_y), verbose=1, shuffle=False)
+        history = model.fit(train_X, train_y, epochs=20, batch_size=96, validation_data=(cv_X, cv_y), verbose=1, shuffle=False)
 
         #Test for the day after
         test = values[n_cv_seconds:, :]
@@ -100,4 +101,4 @@ if __name__ == '__main__':
         results.append(np.sqrt(metrics.mean_squared_error(test_y, yhat)))
 
     with open(OUTPUT_FILE, 'a') as writer:
-        writer.write("BiGRU2,"+",".join([f'{num:.6f}' for num in results])+'\n')
+        writer.write("BiGRU3,"+",".join([f'{num:.6f}' for num in results])+'\n')
