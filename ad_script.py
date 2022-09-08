@@ -51,6 +51,7 @@ scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 for k in CORR_GROUP:
     scaled_df['AD'] = " "
     scaled_df[k + ' AD Detected'] = " "
+    scaled_df[k + ' Predict'] = " "
 
 random.seed(SEED1)
 anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
@@ -98,6 +99,7 @@ for var in CORR_GROUP:
             if row['AD'] == True or row['AD'] == False:
                 tensor = np.array(features).reshape(-1, history_window, len(CORR_GROUP[var]))
                 res = model.predict(tensor, verbose=0)
+                scaled_df.at[index, var + ' Predict'] = res
                 ad_detected = abs(res - row[var]) > AD_THRESHOLD[var]
                 scaled_df.at[index, var + ' AD Detected'] = ad_detected
             features = features[len(CORR_GROUP[var]):]
