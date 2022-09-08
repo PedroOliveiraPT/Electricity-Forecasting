@@ -49,13 +49,14 @@ scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
 for k in CORR_GROUP:
     scaled_df[k + ' AD'] = " "
+    scaled_df[k + ' AD Prevision'] = " "
     scaled_df[k + ' AD Detected'] = " "
 
 
 anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
 for index, row in anomaly_df.iterrows():
     for k in CORR_GROUP:
-        is_anomaly = random() < 0.05
+        is_anomaly = random() < 0.005
         if is_anomaly:
             anomaly_df.at[index, k] -= 0.5
             anomaly_df.at[index, k + ' AD'] = True
@@ -77,13 +78,15 @@ for var in CORR_GROUP:
             if row[var + ' AD'] == True or row[var + ' AD'] == False:
                 tensor = np.array(features).reshape(-1, history_window, len(CORR_GROUP[var]))
                 res = model.predict(tensor, verbose=0)
-                ad_detected = abs(res - row[var]) > AD_THRESHOLD[var]
+                ad_detected = abs(res - row[var]) > 0.1
+                scaled_df.at[index, var + ' AD Prevision'] = res
                 scaled_df.at[index, var + ' AD Detected'] = ad_detected
             features = features[len(CORR_GROUP[var]):]
             
         counter += 1
         predictors = row[CORR_GROUP[var]]
         features += predictors.to_list()
+
 
 anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
 results = {k:[0,0,0,0] for k in CORR_GROUP}
@@ -95,8 +98,8 @@ for index, row in anomaly_df.iterrows():
         else:
             if row[k + ' AD Detected']: results[k][2]+=1
             else: results[k][3]+=1
-
 results_df = pd.DataFrame.from_dict(results, orient='index')
-results_df.to_csv('results/ad_results.csv')
+results.to_csv('results/ad_results.csv')
+#scaled_df.tail(int(0.1*len(scaled_df))).to_csv('results/ad_results.csv')
 
 
