@@ -3,10 +3,11 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import autokeras as ak
 from sklearn import metrics # for the evaluation
-from settings import CORR_GROUP, AD_THRESHOLD, INPUT_FILE
+from settings import CORR_GROUP, AD_THRESHOLD, INPUT_FILE, SEED1
 import tensorflow as tf
 import logging
-from random import random
+import random
+import pickle
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', filename='anomalydetection.log', level=logging.DEBUG)
@@ -48,38 +49,58 @@ d = scaler.fit_transform(df_2)
 scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
 
 for k in CORR_GROUP:
-    scaled_df[k + ' AD'] = " "
-    scaled_df[k + ' AD Prevision'] = " "
+    scaled_df['AD'] = " "
     scaled_df[k + ' AD Detected'] = " "
+    scaled_df[k + ' Predict'] = " "
 
-
+random.seed(SEED1)
 anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
+control = 0
 for index, row in anomaly_df.iterrows():
-    for k in CORR_GROUP:
-        is_anomaly = random() < 0.005
-        if is_anomaly:
-            anomaly_df.at[index, k] -= 0.5
-            anomaly_df.at[index, k + ' AD'] = True
-        else:
-            anomaly_df.at[index, k + ' AD'] = False
+    if control != 0:
+        if control > 5:
+            anomaly_df.at[index, 'AD'] = True
+            for k in CORR_GROUP:
+                anomaly_df.at[index, k] /= 2
+            control = 0
+            continue
+
+        anomaly_df.at[index, 'AD'] = True
+        for k in CORR_GROUP:
+            anomaly_df.at[index, k] = 0
+        control += 1
+        continue
+
+    is_anomaly = random.random() < 0.01
+    if is_anomaly:
+        anomaly_df.at[index, 'AD'] = True
+        for k in CORR_GROUP:
+            anomaly_df.at[index, k] /= 2
+        control += 1
+        
+    else:
+        anomaly_df.at[index, 'AD'] = False
 
 scaled_df.iloc[-int(0.1*len(scaled_df)):] = anomaly_df
 
+models_linreg = ['ReacEc_L1', 'ReacEc_L3', 'RealE_SUM']
 
 for var in CORR_GROUP:
     logging.info(var + " started script")
-    model = tf.keras.models.load_model(f'models/{var}_autokeras.h5')
+    model = None
+    if var in models_linreg: model = pickle.load(open(f'models/{var}_model.sav', 'rb'))
+    else: model = tf.keras.models.load_model(f'models/{var}_autokeras.h5')
     features = []
     counter = 0
     history_window = 15
     for index, row in scaled_df.iterrows():
 
         if counter >= history_window:
-            if row[var + ' AD'] == True or row[var + ' AD'] == False:
+            if row['AD'] == True or row['AD'] == False:
                 tensor = np.array(features).reshape(-1, history_window, len(CORR_GROUP[var]))
                 res = model.predict(tensor, verbose=0)
-                ad_detected = abs(res - row[var]) > 0.1
-                scaled_df.at[index, var + ' AD Prevision'] = res
+                scaled_df.at[index, var + ' Predict'] = res
+                ad_detected = abs(res - row[var]) > AD_THRESHOLD[var]
                 scaled_df.at[index, var + ' AD Detected'] = ad_detected
             features = features[len(CORR_GROUP[var]):]
             
@@ -89,6 +110,7 @@ for var in CORR_GROUP:
 
 
 anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
+anomaly_df.to_csv('results/ad_df.csv')
 results = {k:[0,0,0,0] for k in CORR_GROUP}
 for index, row in anomaly_df.iterrows():
     for k in CORR_GROUP:
