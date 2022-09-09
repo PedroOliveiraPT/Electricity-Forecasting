@@ -98,7 +98,10 @@ for var in CORR_GROUP:
         if counter >= history_window:
             if row['AD'] == True or row['AD'] == False:
                 tensor = np.array(features).reshape(-1, history_window, len(CORR_GROUP[var]))
-                res = model.predict(tensor, verbose=0)
+                if var in models_linreg: res = model.predict(np.array(features).reshape(1, -1))
+                else: 
+                    tensor = np.array(features).reshape(-1, history_window, len(CORR_GROUP[var]))
+                    res = model.predict(tensor, verbose=0)
                 scaled_df.at[index, var + ' Predict'] = res
                 ad_detected = abs(res - row[var]) > AD_THRESHOLD[var]
                 scaled_df.at[index, var + ' AD Detected'] = ad_detected
