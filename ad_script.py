@@ -58,7 +58,7 @@ anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
 control = 0
 for index, row in anomaly_df.iterrows():
     if control != 0:
-        if control > 5:
+        if control > 10:
             anomaly_df.at[index, 'AD'] = True
             for k in CORR_GROUP:
                 anomaly_df.at[index, k] /= 2
@@ -71,7 +71,7 @@ for index, row in anomaly_df.iterrows():
         control += 1
         continue
 
-    is_anomaly = random.random() < 0.01
+    is_anomaly = random.random() < 0.005
     if is_anomaly:
         anomaly_df.at[index, 'AD'] = True
         for k in CORR_GROUP:
@@ -113,7 +113,8 @@ for var in CORR_GROUP:
 
 
 anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
-anomaly_df.to_csv('results/ad_df.csv')
+anomaly_df.to_csv('results/ad_df2.csv')
+'''
 results = {k:[0,0,0,0] for k in CORR_GROUP}
 for index, row in anomaly_df.iterrows():
     for k in CORR_GROUP:
@@ -124,7 +125,7 @@ for index, row in anomaly_df.iterrows():
             if row[k + ' AD Detected']: results[k][2]+=1
             else: results[k][3]+=1
 results_df = pd.DataFrame.from_dict(results, orient='index')
-results.to_csv('results/ad_results.csv')
+results.to_csv('results/ad_results.csv')'''
 #scaled_df.tail(int(0.1*len(scaled_df))).to_csv('results/ad_results.csv')
 
 
