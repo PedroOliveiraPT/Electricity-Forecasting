@@ -58,7 +58,7 @@ anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
 control = 0
 for index, row in anomaly_df.iterrows():
     if control != 0:
-        if control > 10:
+        if control > 20:
             anomaly_df.at[index, 'AD'] = True
             for k in CORR_GROUP:
                 anomaly_df.at[index, k] /= 2
@@ -71,7 +71,7 @@ for index, row in anomaly_df.iterrows():
         control += 1
         continue
 
-    is_anomaly = random.random() < 0.005
+    is_anomaly = random.random() < 0.0025
     if is_anomaly:
         anomaly_df.at[index, 'AD'] = True
         for k in CORR_GROUP:
@@ -113,7 +113,7 @@ for var in CORR_GROUP:
 
 
 anomaly_df = scaled_df.tail(int(0.1*len(scaled_df)))
-anomaly_df.to_csv('results/ad_df2.csv')
+anomaly_df.to_csv('results/ad_df3.csv')
 '''
 results = {k:[0,0,0,0] for k in CORR_GROUP}
 for index, row in anomaly_df.iterrows():
