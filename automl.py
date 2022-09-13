@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import logging
+import pickle
 
 logging.basicConfig(format='%(asctime)s %(message)s', filename='automl.log', level=logging.DEBUG)
 logging.info('Started training')
@@ -48,7 +49,6 @@ if __name__ == '__main__':
     # df_2 = df.groupby(np.arange(len(df))//60).mean()
 
     scaler = MinMaxScaler()
-    scaler = MinMaxScaler()
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
     results = []
@@ -66,13 +66,14 @@ if __name__ == '__main__':
         train_X, train_y = train[:, :-1], train[:, -1:]
         test_X, test_y = cv[:, :-1], cv[:, -1:]
         automl = autosklearn.regression.AutoSklearnRegressor(
-            time_left_for_this_task=2*3600,
-            per_run_time_limit=600,
-            tmp_folder='./tmp/autosklearn_regression_'+k+'_tmp',
+            time_left_for_this_task=4*3600,
+            per_run_time_limit=1200,
+            tmp_folder='./tmp/autosklearn_regression_'+k+'_tmp_final',
         )
         try:
             automl.fit(train_X, train_y, dataset_name=k)
             test_predictions = automl.predict(test_X)
+            pickle.dump(automl, 'wb')
             results.append(sklearn.metrics.mean_squared_error(test_y, test_predictions, squared=False))
         except Exception as e:
             logging.exception(e)
