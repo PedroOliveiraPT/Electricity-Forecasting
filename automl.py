@@ -9,6 +9,7 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import pickle
 import logging
+import pickle
 
 logging.basicConfig(format='%(asctime)s %(message)s', filename='automl.log', level=logging.DEBUG)
 logging.info('Started training')
@@ -49,7 +50,6 @@ if __name__ == '__main__':
     # df_2 = df.groupby(np.arange(len(df))//60).mean()
 
     scaler = MinMaxScaler()
-    scaler = MinMaxScaler()
     d = scaler.fit_transform(df_2)
     scaled_df = pd.DataFrame(d, columns=df_2.columns, index=df_2.index)
     results = []
@@ -75,6 +75,7 @@ if __name__ == '__main__':
             automl.fit(train_X, train_y, dataset_name=k)
             pickle.dump(automl, open('models/autosklearn_'+k, 'wb'))
             test_predictions = automl.predict(test_X)
+            pickle.dump(automl, 'wb')
             results.append(sklearn.metrics.mean_squared_error(test_y, test_predictions, squared=False))
         except Exception:
             logging.info('error')
