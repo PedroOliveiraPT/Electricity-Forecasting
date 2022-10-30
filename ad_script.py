@@ -84,12 +84,14 @@ for index, row in anomaly_df.iterrows():
 scaled_df.iloc[-int(0.1*len(scaled_df)):] = anomaly_df
 
 models_linreg = ['ReacEc_L1', 'ReacEc_L3', 'RealE_SUM']
+ignore = ['F', 'C_phi_L3']
 
 for var in CORR_GROUP:
+    if var in ignore: continue
     logging.info(var + " started script")
     model = None
     if var in models_linreg: model = pickle.load(open(f'models/{var}_model.sav', 'rb'))
-    else: model = tf.keras.models.load_model(f'models/{var}_autokeras.h5')
+    else: model = pickle.load(open(f'models/autosklearn_{var}', 'rb'))
     features = []
     counter = 0
     history_window = 15
@@ -97,11 +99,7 @@ for var in CORR_GROUP:
 
         if counter >= history_window:
             if row['AD'] == True or row['AD'] == False:
-                tensor = np.array(features).reshape(-1, history_window, len(CORR_GROUP[var]))
-                if var in models_linreg: res = model.predict(np.array(features).reshape(1, -1))
-                else: 
-                    tensor = np.array(features).reshape(-1, history_window, len(CORR_GROUP[var]))
-                    res = model.predict(tensor, verbose=0)
+                res = model.predict(np.array(features).reshape(1, -1))
                 scaled_df.at[index, var + ' Predict'] = res
                 ad_detected = abs(res - row[var]) > AD_THRESHOLD[var]
                 scaled_df.at[index, var + ' AD Detected'] = ad_detected

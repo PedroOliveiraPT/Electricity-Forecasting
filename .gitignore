@@ -136,6 +136,8 @@ dmypy.json
 
 # Mongo data
 data/
+
+models/
 tmp/
 time_series_forecaster/
 autokeras_ml/

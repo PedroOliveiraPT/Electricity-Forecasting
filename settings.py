@@ -60,21 +60,20 @@ CORR_GROUP = {
     'AE_SUM',
     'ReacE_SUM'],
     'H_TDH_U_L2_N': ['H_TDH_U_L2_N', 'H_TDH_U_L3_N', 'H_TDH_U_L1_N'],
-    
 }
 
 INPUT_FILE="data/influx_data_filtered.csv"
 OUTPUT_FILE='./results/rmse_influx_results.csv'
 
 AD_THRESHOLD = {
-    'P_SUM': 0.020,
-    'U_L1_N': 0.047,
-    'I_SUM': 0.08,
-    'H_TDH_I_L3_N': 0.06,
-    'F': 0.054,
-    'ReacEc_L1': 0.016,
-    'RealE_SUM': 0.005,
-    'C_phi_L3': 0.075,
-    'ReacEc_L3': 0.005,
-    'H_TDH_U_L2_N': 0.04
+    'P_SUM': 0.4,
+    'U_L1_N': 0.1,
+    'I_SUM': 0.3,
+    'H_TDH_I_L3_N': 0.5,
+    'F': 0.3,
+    'ReacEc_L1': 0.3,
+    'RealE_SUM': 0.3,
+    'C_phi_L3': 0.3,
+    'ReacEc_L3': 0.4,
+    'H_TDH_U_L2_N': 0.3
 }
